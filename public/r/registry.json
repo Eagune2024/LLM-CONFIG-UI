@@ -75,6 +75,66 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "llm-config",
+      "type": "registry:component",
+      "title": "LLM Config",
+      "description": "A component for configuring LLM models.",
+      "registryDependencies": [
+        "select",
+        "slider",
+        "dialog",
+        "button",
+        "input",
+        "label"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/llm-config/index.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/blocks/llm-config/types.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/blocks/llm-config/model-selector.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/blocks/llm-config/provider-selector.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/blocks/llm-config/provider.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/blocks/llm-config/form.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/blocks/llm-config/connection-test-button.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/blocks/llm-config/temperature-slider.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/blocks/llm-config/collapsible-section.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/blocks/llm-config/base-url-input.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/blocks/llm-config/access-key-input.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
