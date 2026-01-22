@@ -19,7 +19,6 @@ export const LLMConfigForm = forwardRef<LLMConfigFormRef, LLMConfigFormProps>(
       onChange,
       validate,
       className,
-      progressive = false,
     },
     ref,
   ) => {
@@ -116,9 +115,6 @@ export const LLMConfigForm = forwardRef<LLMConfigFormRef, LLMConfigFormProps>(
       onChange?.(newConfig);
     };
 
-    // 渐进式表单：根据provider选择决定是否显示后续字段
-    const shouldShowCredentials = !progressive || !!value.provider;
-
     // 过滤需要显示的字段组
     const visibleGroups = useMemo(() => {
       return formConfig.groups
@@ -130,15 +126,6 @@ export const LLMConfigForm = forwardRef<LLMConfigFormRef, LLMConfigFormProps>(
                 ? field.visible(value)
                 : (field.visible ?? true);
 
-            // 渐进式表单逻辑
-            if (
-              progressive &&
-              !shouldShowCredentials &&
-              field.name !== "provider"
-            ) {
-              return false;
-            }
-
             return isVisible;
           });
 
@@ -148,7 +135,7 @@ export const LLMConfigForm = forwardRef<LLMConfigFormRef, LLMConfigFormProps>(
           };
         })
         .filter((group) => group.fields.length > 0);
-    }, [formConfig.groups, value, progressive, shouldShowCredentials]);
+    }, [formConfig.groups, value]);
 
     return (
       <div className={cn("space-y-6 w-full", className)}>
