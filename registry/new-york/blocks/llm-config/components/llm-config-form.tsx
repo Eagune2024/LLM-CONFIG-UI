@@ -1,24 +1,11 @@
 "use client";
 
-import React, {
-  useState,
-  useMemo,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import React, { useState, useMemo, forwardRef, useImperativeHandle } from "react";
 import { cn } from "@/lib/utils";
 import { FormField } from "./form-field";
-import type {
-  LLMConfigFormProps,
-  FieldConfig,
-  LLMConfigFormRef,
-} from "./form-config";
+import type { LLMConfigFormProps, FieldConfig, LLMConfigFormRef } from "./form-config";
 import type { LLMConfig, ValidationResult } from "./types";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/registry/new-york/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/registry/new-york/ui/collapsible";
 
 /**
  * 配置驱动的LLM配置表单组件
@@ -66,33 +53,6 @@ export const LLMConfigForm = forwardRef<LLMConfigFormRef, LLMConfigFormProps>(
       }
 
       return null;
-    };
-
-    // 验证所有字段
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const validateAllFields = (): boolean => {
-      const newErrors: Record<string, string> = {};
-
-      formConfig.groups.forEach((group) => {
-        group.fields.forEach((field) => {
-          // 检查字段是否可见
-          const isVisible =
-            typeof field.visible === "function"
-              ? field.visible(value)
-              : (field.visible ?? true);
-
-          if (isVisible) {
-            const fieldValue = value[field.name];
-            const error = validateField(field, fieldValue, value);
-            if (error) {
-              newErrors[field.name as string] = error;
-            }
-          }
-        });
-      });
-
-      setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
     };
 
     // 配置级别验证
