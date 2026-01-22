@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Button } from "@/registry/new-york/ui/button";
 import { cn } from "@/lib/utils";
 import { FormField } from "./form-field";
 import type { LLMConfigFormProps, FieldConfig } from "./form-config";
@@ -21,13 +20,6 @@ export function LLMConfigForm({
   value,
   onChange,
   validate,
-  onSubmit,
-  onReset,
-  validateOnSubmit = true,
-  submitButtonText = "保存",
-  resetButtonText = "重置",
-  showSubmitButton = true,
-  showResetButton = true,
   className,
   progressive = false,
 }: LLMConfigFormProps) {
@@ -64,6 +56,7 @@ export function LLMConfigForm({
   };
 
   // 验证所有字段
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const validateAllFields = (): boolean => {
     const newErrors: Record<string, string> = {};
 
@@ -90,6 +83,7 @@ export function LLMConfigForm({
   };
 
   // 配置级别验证
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const validateConfig = (): ValidationResult => {
     if (validate) {
       return validate(value);
@@ -131,33 +125,6 @@ export function LLMConfigForm({
     onChange?.(newConfig);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (validateOnSubmit) {
-      const isValid = validateAllFields();
-      if (!isValid) {
-        return;
-      }
-    }
-
-    // 执行配置级别验证（如果有）
-    const configValidation = validateConfig();
-    if (configValidation !== true) {
-      const configErrors =
-        (configValidation as { errors?: Record<string, string> }).errors || {};
-      setErrors(configErrors);
-      return;
-    }
-
-    await onSubmit?.(value);
-  };
-
-  const handleReset = () => {
-    setErrors({});
-    onReset?.();
-  };
-
   // 渐进式表单：根据provider选择决定是否显示后续字段
   const shouldShowCredentials = !progressive || !!value.provider;
 
@@ -193,7 +160,7 @@ export function LLMConfigForm({
   }, [formConfig.groups, value, progressive, shouldShowCredentials]);
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-6 w-full", className)}>
+    <div className={cn("space-y-6 w-full", className)}>
       <div className="space-y-4">
         {visibleGroups.map((group, groupIndex) => {
           const groupContent = (
@@ -250,19 +217,6 @@ export function LLMConfigForm({
           return groupContent;
         })}
       </div>
-
-      {(showSubmitButton || showResetButton) && (
-        <div className="flex justify-end gap-2">
-          {showResetButton && (
-            <Button type="button" variant="outline" onClick={handleReset}>
-              {resetButtonText}
-            </Button>
-          )}
-          {showSubmitButton && (
-            <Button type="submit">{submitButtonText}</Button>
-          )}
-        </div>
-      )}
-    </form>
+    </div>
   );
 }

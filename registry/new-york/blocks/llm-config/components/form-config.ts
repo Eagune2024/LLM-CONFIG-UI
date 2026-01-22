@@ -152,25 +152,9 @@ export interface FormConfig {
 }
 
 /**
- * 表单提交属性
- */
-export interface FormSubmitProps {
-  /** 提交按钮文本 */
-  submitButtonText?: string;
-  /** 重置按钮文本 */
-  resetButtonText?: string;
-  /** 是否显示提交按钮 */
-  showSubmitButton?: boolean;
-  /** 是否显示重置按钮 */
-  showResetButton?: boolean;
-  /** 是否在提交时验证 */
-  validateOnSubmit?: boolean;
-}
-
-/**
  * 完整的LLM配置表单属性
  */
-export interface LLMConfigFormProps extends FormSubmitProps {
+export interface LLMConfigFormProps {
   /** 表单配置 */
   config: FormConfig;
 
@@ -185,12 +169,6 @@ export interface LLMConfigFormProps extends FormSubmitProps {
 
   /** 自定义验证函数 */
   validate?: (config: LLMConfig) => ValidationResult;
-
-  /** 提交回调 */
-  onSubmit?: (config: LLMConfig) => void | Promise<void>;
-
-  /** 重置回调 */
-  onReset?: () => void;
 
   /** 自定义类名 */
   className?: string;
