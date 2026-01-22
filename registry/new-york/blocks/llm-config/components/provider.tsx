@@ -13,7 +13,10 @@ import type {
   ValidationResult,
   LLMConfigContextValue,
 } from "./types";
-import { DEFAULT_PROVIDERS, DEFAULT_CONFIG } from "@/lib/providers";
+import {
+  DEFAULT_PROVIDERS,
+  DEFAULT_CONFIG,
+} from "@/registry/new-york/blocks/llm-config/lib/providers";
 
 const LLMConfigContext = createContext<LLMConfigContextValue | undefined>(
   undefined,
