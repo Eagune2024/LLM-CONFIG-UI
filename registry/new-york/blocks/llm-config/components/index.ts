@@ -22,5 +22,6 @@ export type {
   FieldGroup,
   FormConfig,
   LLMConfigFormProps,
+  LLMConfigFormRef,
   CustomFieldRenderProps,
 } from "./form-config";

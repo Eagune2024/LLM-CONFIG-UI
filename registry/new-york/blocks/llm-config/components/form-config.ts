@@ -2,6 +2,14 @@ import type { ReactNode } from "react";
 import type { LLMConfig, ProviderConfig, ValidationResult } from "./types";
 
 /**
+ * LLMConfigForm 暴露的方法
+ */
+export interface LLMConfigFormRef {
+  /** 触发表单校验 */
+  validate: () => ValidationResult;
+}
+
+/**
  * 字段类型枚举
  */
 export type FieldType =

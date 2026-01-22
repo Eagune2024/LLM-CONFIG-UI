@@ -3,15 +3,34 @@
 import * as React from "react";
 import { OpenInV0Button } from "@/components/open-in-v0-button";
 import { LLMConfigForm } from "@/registry/new-york/blocks/llm-config/components";
-import type { LLMConfig } from "@/registry/new-york/blocks/llm-config/components";
+import type {
+  LLMConfig,
+  LLMConfigFormRef,
+} from "@/registry/new-york/blocks/llm-config/components";
 import { defaultLLMFormConfig } from "@/registry/new-york/blocks/llm-config/lib/default-form-config";
 import { DEFAULT_CONFIG } from "@/registry/new-york/blocks/llm-config/lib/providers";
+import { Button } from "@/registry/new-york/ui/button";
 
 export default function Home() {
+  const formRef = React.useRef<LLMConfigFormRef>(null);
   const [config, setConfig] = React.useState<LLMConfig>(DEFAULT_CONFIG);
 
   const handleConfigChange = (newConfig: LLMConfig) => {
     setConfig(newConfig);
+  };
+
+  const handleReset = () => {
+    setConfig(DEFAULT_CONFIG);
+  };
+
+  const handleConfirm = () => {
+    const result = formRef.current?.validate();
+    if (result === true) {
+      console.log("配置校验通过:", config);
+      alert(`配置已确认:\n${JSON.stringify(config, null, 2)}`);
+    } else {
+      console.log("配置校验失败:", result);
+    }
   };
 
   return (
@@ -32,11 +51,18 @@ export default function Home() {
           </div>
           <div className="flex items-center justify-center min-h-[400px] relative">
             <LLMConfigForm
+              ref={formRef}
               config={defaultLLMFormConfig}
               value={config}
               onChange={handleConfigChange}
               progressive={true}
             />
+          </div>
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="outline" onClick={handleReset}>
+              重置
+            </Button>
+            <Button onClick={handleConfirm}>确认</Button>
           </div>
         </div>
       </main>
