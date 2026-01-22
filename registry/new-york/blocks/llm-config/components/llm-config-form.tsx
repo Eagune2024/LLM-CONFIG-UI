@@ -5,9 +5,13 @@ import { Button } from "@/registry/new-york/ui/button";
 import { useLLMConfig } from "./provider";
 import { cn } from "@/lib/utils";
 import { FormField } from "./form-field";
-import { CollapsibleSection } from "./collapsible-section";
 import type { LLMConfigFormProps, FieldConfig } from "./form-config";
 import type { LLMConfig } from "./types";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/registry/new-york/ui/collapsible";
 
 /**
  * 配置驱动的LLM配置表单组件
@@ -169,22 +173,22 @@ export function LLMConfigForm({
             </div>
           );
 
-          // 如果是可折叠的分组，使用CollapsibleSection包装
           if (group.collapsible) {
             return (
-              <CollapsibleSection
-                key={groupIndex}
-                title={group.title || ""}
-                defaultOpen={group.defaultOpen}
-              >
-                {group.fields.map((field, fieldIndex) => (
-                  <FormField
-                    key={`${groupIndex}-${fieldIndex}`}
-                    config={field}
-                    error={errors[field.name as string]}
-                  />
-                ))}
-              </CollapsibleSection>
+              <Collapsible key={groupIndex} className="border rounded-lg">
+                <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-3 h-auto hover:bg-muted/50">
+                  <span className="font-medium">{group.title || ""}</span>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="px-4 pb-4 pt-2 space-y-4">
+                  {group.fields.map((field, fieldIndex) => (
+                    <FormField
+                      key={`${groupIndex}-${fieldIndex}`}
+                      config={field}
+                      error={errors[field.name as string]}
+                    />
+                  ))}
+                </CollapsibleContent>
+              </Collapsible>
             );
           }
 

@@ -9,6 +9,7 @@
       "title": "LLM Config",
       "description": "A component for configuring LLM models.",
       "registryDependencies": [
+        "collapsible",
         "select",
         "slider",
         "dialog",

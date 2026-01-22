@@ -1,7 +1,6 @@
 export { LLMConfigProvider, useLLMConfig } from "./provider";
 export { LLMConfigForm } from "./llm-config-form";
 export { FormField } from "./form-field";
-export { CollapsibleSection } from "./collapsible-section";
 
 export type {
   LLMProvider,
@@ -28,5 +27,3 @@ export type {
   LLMConfigFormProps,
   CustomFieldRenderProps,
 } from "./form-config";
-
-export type { CollapsibleSectionProps } from "./collapsible-section";
