@@ -14,7 +14,7 @@ import {
   CollapsibleSection,
   BaseUrlInput,
   TemperatureSlider,
-} from "@/registry/new-york/blocks/llm-config";
+} from "@/registry/new-york/blocks/llm-config/components/llm-config";
 
 export default function Home() {
   return (
