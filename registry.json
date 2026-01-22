@@ -18,49 +18,59 @@
       ],
       "files": [
         {
-          "path": "registry/new-york/blocks/llm-config/index.ts",
+          "path": "registry/new-york/blocks/llm-config/components/llm-config/index.ts",
           "type": "registry:component",
           "target": "components/llm-config/index.tsx"
         },
         {
           "path": "registry/new-york/blocks/llm-config/components/llm-config/types.ts",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/llm-config/types.ts"
         },
         {
           "path": "registry/new-york/blocks/llm-config/components/llm-config/model-selector.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/llm-config/model-selector.tsx"
         },
         {
           "path": "registry/new-york/blocks/llm-config/components/llm-config/provider-selector.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/llm-config/provider-selector.tsx"
         },
         {
           "path": "registry/new-york/blocks/llm-config/components/llm-config/provider.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/llm-config/provider.tsx"
         },
         {
           "path": "registry/new-york/blocks/llm-config/components/llm-config/form.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/llm-config/form.tsx"
         },
         {
           "path": "registry/new-york/blocks/llm-config/components/llm-config/connection-test-button.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/llm-config/connection-test-button.tsx"
         },
         {
           "path": "registry/new-york/blocks/llm-config/components/llm-config/temperature-slider.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/llm-config/temperature-slider.tsx"
         },
         {
           "path": "registry/new-york/blocks/llm-config/components/llm-config/collapsible-section.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/llm-config/collapsible-section.tsx"
         },
         {
           "path": "registry/new-york/blocks/llm-config/components/llm-config/base-url-input.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/llm-config/base-url-input.tsx"
         },
         {
           "path": "registry/new-york/blocks/llm-config/components/llm-config/access-key-input.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "components/llm-config/access-key-input.tsx"
         }
       ]
     }
