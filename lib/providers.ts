@@ -1,4 +1,4 @@
-import type { ProviderConfig } from "@/registry/new-york/blocks/llm-config/components/llm-config/types";
+import type { ProviderConfig } from "@/registry/new-york/blocks/llm-config/components/types";
 
 export const DEFAULT_PROVIDERS: ProviderConfig[] = [
   {
