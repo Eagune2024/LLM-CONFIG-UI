@@ -2,15 +2,18 @@
 
 import * as React from "react";
 import { OpenInV0Button } from "@/components/open-in-v0-button";
-// This page displays items from the custom registry.
-// You are free to implement this with your own design as needed.
-import {
-  LLMConfigForm,
-  LLMConfigProvider,
-} from "@/registry/new-york/blocks/llm-config/components";
+import { LLMConfigForm } from "@/registry/new-york/blocks/llm-config/components";
+import type { LLMConfig } from "@/registry/new-york/blocks/llm-config/components";
 import { defaultLLMFormConfig } from "@/registry/new-york/blocks/llm-config/lib/default-form-config";
+import { DEFAULT_CONFIG } from "@/registry/new-york/blocks/llm-config/lib/providers";
 
 export default function Home() {
+  const [config, setConfig] = React.useState<LLMConfig>(DEFAULT_CONFIG);
+
+  const handleConfigChange = (newConfig: LLMConfig) => {
+    setConfig(newConfig);
+  };
+
   return (
     <div className="max-w-3xl mx-auto flex flex-col min-h-svh px-4 py-8 gap-8">
       <header className="flex flex-col gap-1">
@@ -23,19 +26,19 @@ export default function Home() {
         <div className="flex flex-col gap-4 border rounded-lg p-4 min-h-[450px] relative">
           <div className="flex items-center justify-between">
             <h2 className="text-sm text-muted-foreground sm:pl-3">
-              A simple hello world component
+              LLM Configuration Form
             </h2>
-            <OpenInV0Button name="hello-world" className="w-fit" />
+            <OpenInV0Button name="llm-config" className="w-fit" />
           </div>
           <div className="flex items-center justify-center min-h-[400px] relative">
-            <LLMConfigProvider>
-              <LLMConfigForm
-                config={defaultLLMFormConfig}
-                showSubmitButton={false}
-                showResetButton={false}
-                progressive={true}
-              />
-            </LLMConfigProvider>
+            <LLMConfigForm
+              config={defaultLLMFormConfig}
+              value={config}
+              onChange={handleConfigChange}
+              showSubmitButton={false}
+              showResetButton={false}
+              progressive={true}
+            />
           </div>
         </div>
       </main>

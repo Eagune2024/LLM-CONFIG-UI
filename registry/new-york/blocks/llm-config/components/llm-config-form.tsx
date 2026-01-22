@@ -2,11 +2,10 @@
 
 import React, { useState, useMemo } from "react";
 import { Button } from "@/registry/new-york/ui/button";
-import { useLLMConfig } from "./provider";
 import { cn } from "@/lib/utils";
 import { FormField } from "./form-field";
 import type { LLMConfigFormProps, FieldConfig } from "./form-config";
-import type { LLMConfig } from "./types";
+import type { LLMConfig, ValidationResult } from "./types";
 import {
   Collapsible,
   CollapsibleContent,
@@ -19,6 +18,9 @@ import {
  */
 export function LLMConfigForm({
   config: formConfig,
+  value,
+  onChange,
+  validate,
   onSubmit,
   onReset,
   validateOnSubmit = true,
@@ -29,13 +31,12 @@ export function LLMConfigForm({
   className,
   progressive = false,
 }: LLMConfigFormProps) {
-  const { config, resetConfig, validateConfig } = useLLMConfig();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // 执行字段验证
   const validateField = (
     fieldConfig: FieldConfig,
-    value: unknown,
+    fieldValue: unknown,
     currentConfig: LLMConfig,
   ): string | null => {
     // 检查必填字段
@@ -44,13 +45,16 @@ export function LLMConfigForm({
         ? fieldConfig.required(currentConfig)
         : fieldConfig.required;
 
-    if (isRequired && (value === undefined || value === null || value === "")) {
+    if (
+      isRequired &&
+      (fieldValue === undefined || fieldValue === null || fieldValue === "")
+    ) {
       return `${fieldConfig.label}是必填项`;
     }
 
     // 执行自定义验证
     if (fieldConfig.validate) {
-      const customError = fieldConfig.validate(value, currentConfig);
+      const customError = fieldConfig.validate(fieldValue, currentConfig);
       if (customError) {
         return customError;
       }
@@ -68,12 +72,12 @@ export function LLMConfigForm({
         // 检查字段是否可见
         const isVisible =
           typeof field.visible === "function"
-            ? field.visible(config)
+            ? field.visible(value)
             : (field.visible ?? true);
 
         if (isVisible) {
-          const value = config[field.name];
-          const error = validateField(field, value, config);
+          const fieldValue = value[field.name];
+          const error = validateField(field, fieldValue, value);
           if (error) {
             newErrors[field.name as string] = error;
           }
@@ -83,6 +87,48 @@ export function LLMConfigForm({
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  // 配置级别验证
+  const validateConfig = (): ValidationResult => {
+    if (validate) {
+      return validate(value);
+    }
+
+    const errors: Record<string, string> = {};
+
+    if (!value.provider) {
+      errors.provider = "请选择提供商";
+    }
+
+    if (!value.apiKey) {
+      errors.apiKey = "请输入 API Key";
+    }
+
+    if (!value.model) {
+      errors.model = "请选择模型";
+    }
+
+    // 提供商特定验证
+    if (value.provider === "azure-openai") {
+      if (!value.azureDeploymentName) {
+        errors.azureDeploymentName = "请输入部署名称";
+      }
+      if (!value.azureApiVersion) {
+        errors.azureApiVersion = "请选择 API 版本";
+      }
+    }
+
+    return Object.keys(errors).length === 0 ? true : { valid: false, errors };
+  };
+
+  // 处理字段更新
+  const handleFieldChange = (
+    fieldName: keyof LLMConfig,
+    fieldValue: unknown,
+  ) => {
+    const newConfig = { ...value, [fieldName]: fieldValue };
+    onChange?.(newConfig);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -95,26 +141,25 @@ export function LLMConfigForm({
       }
     }
 
-    // 执行Context级别的验证（如果有）
-    const contextValidation = validateConfig();
-    if (contextValidation !== true) {
-      const contextErrors =
-        (contextValidation as { errors?: Record<string, string> }).errors || {};
-      setErrors(contextErrors);
+    // 执行配置级别验证（如果有）
+    const configValidation = validateConfig();
+    if (configValidation !== true) {
+      const configErrors =
+        (configValidation as { errors?: Record<string, string> }).errors || {};
+      setErrors(configErrors);
       return;
     }
 
-    await onSubmit?.(config);
+    await onSubmit?.(value);
   };
 
   const handleReset = () => {
-    resetConfig();
     setErrors({});
     onReset?.();
   };
 
   // 渐进式表单：根据provider选择决定是否显示后续字段
-  const shouldShowCredentials = !progressive || !!config.provider;
+  const shouldShowCredentials = !progressive || !!value.provider;
 
   // 过滤需要显示的字段组
   const visibleGroups = useMemo(() => {
@@ -124,7 +169,7 @@ export function LLMConfigForm({
         const visibleFields = group.fields.filter((field) => {
           const isVisible =
             typeof field.visible === "function"
-              ? field.visible(config)
+              ? field.visible(value)
               : (field.visible ?? true);
 
           // 渐进式表单逻辑
@@ -145,7 +190,7 @@ export function LLMConfigForm({
         };
       })
       .filter((group) => group.fields.length > 0);
-  }, [formConfig.groups, config, progressive, shouldShowCredentials]);
+  }, [formConfig.groups, value, progressive, shouldShowCredentials]);
 
   return (
     <form onSubmit={handleSubmit} className={cn("space-y-6 w-full", className)}>
@@ -168,6 +213,11 @@ export function LLMConfigForm({
                   key={`${groupIndex}-${fieldIndex}`}
                   config={field}
                   error={errors[field.name as string]}
+                  value={value[field.name]}
+                  onChange={(newValue) =>
+                    handleFieldChange(field.name, newValue)
+                  }
+                  fullConfig={value}
                 />
               ))}
             </div>
@@ -185,6 +235,11 @@ export function LLMConfigForm({
                       key={`${groupIndex}-${fieldIndex}`}
                       config={field}
                       error={errors[field.name as string]}
+                      value={value[field.name]}
+                      onChange={(newValue) =>
+                        handleFieldChange(field.name, newValue)
+                      }
+                      fullConfig={value}
                     />
                   ))}
                 </CollapsibleContent>

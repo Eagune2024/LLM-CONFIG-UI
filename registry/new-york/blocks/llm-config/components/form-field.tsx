@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useLLMConfig } from "./provider";
 import { cn } from "@/lib/utils";
 import { Input } from "@/registry/new-york/ui/input";
 import { Label } from "@/registry/new-york/ui/label";
@@ -19,27 +18,34 @@ import type { LLMConfig } from "./types";
 interface FormFieldProps {
   config: FieldConfig;
   error?: string;
+  value: unknown;
+  onChange: (value: unknown) => void;
+  fullConfig: LLMConfig;
 }
 
 /**
  * 通用表单字段组件
  * 根据字段配置类型自动渲染对应的输入组件
  */
-export function FormField({ config, error }: FormFieldProps) {
-  const { config: llmConfig, updateConfig } = useLLMConfig();
-
+export function FormField({
+  config,
+  error,
+  value,
+  onChange,
+  fullConfig,
+}: FormFieldProps) {
   // 计算字段是否可见
   const isVisible =
     config.visible === undefined ||
     (typeof config.visible === "function"
-      ? config.visible(llmConfig)
+      ? config.visible(fullConfig)
       : config.visible);
 
   // 计算字段是否禁用
   const isDisabled =
     config.disabled === undefined ||
     (typeof config.disabled === "function"
-      ? config.disabled(llmConfig)
+      ? config.disabled(fullConfig)
       : config.disabled);
 
   // 如果字段不可见，不渲染
@@ -47,25 +53,17 @@ export function FormField({ config, error }: FormFieldProps) {
     return null;
   }
 
-  // 获取当前字段值
-  const fieldValue = llmConfig[config.name];
-
-  // 处理值更新
-  const handleChange = (value: unknown) => {
-    updateConfig({ [config.name]: value });
-  };
-
   // 根据字段类型渲染不同的组件
   switch (config.type) {
     case "select":
       return (
         <SelectField
           config={config}
-          value={fieldValue}
-          onChange={handleChange}
+          value={value}
+          onChange={onChange}
           error={error}
           disabled={isDisabled}
-          llmConfig={llmConfig}
+          fullConfig={fullConfig}
         />
       );
     case "text":
@@ -73,8 +71,8 @@ export function FormField({ config, error }: FormFieldProps) {
       return (
         <TextField
           config={config}
-          value={fieldValue}
-          onChange={handleChange}
+          value={value}
+          onChange={onChange}
           error={error}
           disabled={isDisabled}
         />
@@ -83,8 +81,8 @@ export function FormField({ config, error }: FormFieldProps) {
       return (
         <NumberField
           config={config}
-          value={fieldValue}
-          onChange={handleChange}
+          value={value}
+          onChange={onChange}
           error={error}
           disabled={isDisabled}
         />
@@ -93,8 +91,8 @@ export function FormField({ config, error }: FormFieldProps) {
       return (
         <RangeField
           config={config}
-          value={fieldValue}
-          onChange={handleChange}
+          value={value}
+          onChange={onChange}
           error={error}
           disabled={isDisabled}
         />
@@ -103,11 +101,11 @@ export function FormField({ config, error }: FormFieldProps) {
       return (
         <CustomField
           config={config}
-          value={fieldValue}
-          onChange={handleChange}
+          value={value}
+          onChange={onChange}
           error={error}
           disabled={isDisabled}
-          llmConfig={llmConfig}
+          fullConfig={fullConfig}
         />
       );
     default:
@@ -124,21 +122,21 @@ function SelectField({
   onChange,
   error,
   disabled,
-  llmConfig,
+  fullConfig,
 }: {
   config: FieldConfig;
   value: unknown;
   onChange: (value: unknown) => void;
   error?: string;
   disabled: boolean;
-  llmConfig: LLMConfig;
+  fullConfig: LLMConfig;
 }) {
   if (config.type !== "select") return null;
 
   // 获取选项列表
   const options =
     typeof config.options === "function"
-      ? config.options(llmConfig)
+      ? config.options(fullConfig)
       : config.options;
 
   return (
@@ -356,14 +354,14 @@ function CustomField({
   onChange,
   error,
   disabled,
-  llmConfig,
+  fullConfig,
 }: {
   config: FieldConfig;
   value: unknown;
   onChange: (value: unknown) => void;
   error?: string;
   disabled: boolean;
-  llmConfig: LLMConfig;
+  fullConfig: LLMConfig;
 }) {
   if (config.type !== "custom") return null;
 
@@ -372,7 +370,7 @@ function CustomField({
     onChange,
     error,
     disabled,
-    config: llmConfig,
+    config: fullConfig,
   };
 
   return (

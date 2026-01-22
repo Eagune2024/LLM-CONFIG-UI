@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { LLMConfig } from "./types";
+import type { LLMConfig, ProviderConfig, ValidationResult } from "./types";
 
 /**
  * 字段类型枚举
@@ -173,12 +173,28 @@ export interface FormSubmitProps {
 export interface LLMConfigFormProps extends FormSubmitProps {
   /** 表单配置 */
   config: FormConfig;
+
+  /** 当前配置值（受控） */
+  value: LLMConfig;
+
+  /** 配置更新回调 */
+  onChange?: (config: LLMConfig) => void;
+
+  /** 提供商配置列表 */
+  providers?: ProviderConfig[];
+
+  /** 自定义验证函数 */
+  validate?: (config: LLMConfig) => ValidationResult;
+
   /** 提交回调 */
   onSubmit?: (config: LLMConfig) => void | Promise<void>;
+
   /** 重置回调 */
   onReset?: () => void;
+
   /** 自定义类名 */
   className?: string;
+
   /** 是否启用渐进式表单（根据provider选择显示字段） */
   progressive?: boolean;
 }
