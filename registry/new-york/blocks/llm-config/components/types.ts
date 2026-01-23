@@ -26,6 +26,7 @@ export interface LLMConfig {
   temperature?: number;
   maxTokens?: number;
   topP?: number;
+  topK?: number;
   frequencyPenalty?: number;
   presencePenalty?: number;
   // Azure 特定

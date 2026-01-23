@@ -55,6 +55,8 @@ export interface SelectFieldConfig extends BaseFieldConfig {
   options:
     | Array<{ label: string; value: string }>
     | ((config: LLMConfig) => Array<{ label: string; value: string }>);
+  /** 默认值 */
+  defaultValue?: string;
 }
 
 /**
@@ -64,6 +66,8 @@ export interface TextFieldConfig extends BaseFieldConfig {
   type: "text" | "password";
   /** 是否显示密码切换按钮（仅password类型） */
   showPasswordToggle?: boolean;
+  /** 默认值 */
+  defaultValue?: string;
 }
 
 /**
@@ -79,6 +83,8 @@ export interface NumberFieldConfig extends BaseFieldConfig {
   step?: number;
   /** 是否显示当前值 */
   showValue?: boolean;
+  /** 默认值 */
+  defaultValue?: number;
 }
 
 /**
@@ -96,6 +102,8 @@ export interface RangeFieldConfig extends BaseFieldConfig {
   showValue?: boolean;
   /** 值显示格式化函数 */
   formatValue?: (value: number) => string;
+  /** 默认值 */
+  defaultValue?: number;
 }
 
 /**
