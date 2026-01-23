@@ -33,11 +33,7 @@ export interface BaseFieldConfig {
   /** 占位符文本 */
   placeholder?: string;
   /** 是否必填 */
-  required?: boolean | ((config: LLMConfig) => boolean);
-  /** 是否禁用 */
-  disabled?: boolean | ((config: LLMConfig) => boolean);
-  /** 是否可见 */
-  visible?: boolean | ((config: LLMConfig) => boolean);
+  required?: boolean;
   /** 自定义验证函数 */
   validate?: (value: unknown, config: LLMConfig) => string | null;
   /** 自定义类名 */
@@ -51,10 +47,8 @@ export interface BaseFieldConfig {
  */
 export interface SelectFieldConfig extends BaseFieldConfig {
   type: "select";
-  /** 选项列表，可以是静态数组或动态函数 */
-  options:
-    | Array<{ label: string; value: string }>
-    | ((config: LLMConfig) => Array<{ label: string; value: string }>);
+  /** 选项列表 */
+  options: Array<{ label: string; value: string }>
   /** 默认值 */
   defaultValue?: string;
 }
