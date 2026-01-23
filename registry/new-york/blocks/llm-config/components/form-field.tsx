@@ -34,25 +34,6 @@ export function FormField({
   onChange,
   fullConfig,
 }: FormFieldProps) {
-  // 计算字段是否可见
-  const isVisible =
-    config.visible === undefined ||
-    (typeof config.visible === "function"
-      ? config.visible(fullConfig)
-      : config.visible);
-
-  // 计算字段是否禁用
-  const isDisabled =
-    config.disabled === undefined ||
-    (typeof config.disabled === "function"
-      ? config.disabled(fullConfig)
-      : config.disabled);
-
-  // 如果字段不可见，不渲染
-  if (!isVisible) {
-    return null;
-  }
-
   // 根据字段类型渲染不同的组件
   switch (config.type) {
     case "select":
@@ -62,7 +43,7 @@ export function FormField({
           value={value}
           onChange={onChange}
           error={error}
-          disabled={isDisabled}
+          disabled={false}
           fullConfig={fullConfig}
         />
       );
@@ -74,38 +55,7 @@ export function FormField({
           value={value}
           onChange={onChange}
           error={error}
-          disabled={isDisabled}
-        />
-      );
-    case "number":
-      return (
-        <NumberField
-          config={config}
-          value={value}
-          onChange={onChange}
-          error={error}
-          disabled={isDisabled}
-        />
-      );
-    case "range":
-      return (
-        <RangeField
-          config={config}
-          value={value}
-          onChange={onChange}
-          error={error}
-          disabled={isDisabled}
-        />
-      );
-    case "custom":
-      return (
-        <CustomField
-          config={config}
-          value={value}
-          onChange={onChange}
-          error={error}
-          disabled={isDisabled}
-          fullConfig={fullConfig}
+          disabled={false}
         />
       );
     default:
@@ -239,153 +189,3 @@ function TextField({
   );
 }
 
-/**
- * 数字字段
- */
-function NumberField({
-  config,
-  value,
-  onChange,
-  error,
-  disabled,
-}: {
-  config: FieldConfig;
-  value: unknown;
-  onChange: (value: unknown) => void;
-  error?: string;
-  disabled: boolean;
-}) {
-  if (config.type !== "number") return null;
-
-  const numValue = value as number | undefined;
-  const displayValue =
-    numValue !== undefined && numValue !== null ? numValue : "";
-
-  return (
-    <div className={cn("space-y-2", config.className)}>
-      <Label>
-        {config.label}
-        {config.required && <span className="text-destructive ml-1">*</span>}
-      </Label>
-      <Input
-        type="number"
-        className={cn(
-          error && "border-destructive focus-visible:ring-destructive",
-        )}
-        placeholder={config.placeholder}
-        value={displayValue}
-        min={config.min}
-        max={config.max}
-        step={config.step}
-        onChange={(e) => {
-          const num = parseFloat(e.target.value);
-          onChange(isNaN(num) ? undefined : num);
-        }}
-        disabled={disabled}
-      />
-      {config.showValue && numValue !== undefined && numValue !== null && (
-        <p className="text-sm text-muted-foreground">当前值: {numValue}</p>
-      )}
-      {error && <p className="text-sm text-destructive">{error}</p>}
-      {config.description && (
-        <p className="text-sm text-muted-foreground">{config.description}</p>
-      )}
-    </div>
-  );
-}
-
-/**
- * 范围滑块字段
- */
-function RangeField({
-  config,
-  value,
-  onChange,
-  error,
-  disabled,
-}: {
-  config: FieldConfig;
-  value: unknown;
-  onChange: (value: unknown) => void;
-  error?: string;
-  disabled: boolean;
-}) {
-  if (config.type !== "range") return null;
-
-  const numValue = value as number | undefined;
-  const displayValue =
-    numValue !== undefined && numValue !== null ? numValue : config.min;
-
-  return (
-    <div className={cn("space-y-2", config.className)}>
-      <div className="flex items-center justify-between">
-        <Label>
-          {config.label}
-          {config.required && <span className="text-destructive ml-1">*</span>}
-        </Label>
-        <span className="text-sm text-muted-foreground">
-          {config.formatValue ? config.formatValue(displayValue) : displayValue}
-        </span>
-      </div>
-      <input
-        type="range"
-        min={config.min}
-        max={config.max}
-        step={config.step}
-        value={displayValue}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
-        disabled={disabled}
-        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary disabled:opacity-50"
-      />
-      {error && <p className="text-sm text-destructive">{error}</p>}
-      {config.description && (
-        <p className="text-sm text-muted-foreground">{config.description}</p>
-      )}
-    </div>
-  );
-}
-
-/**
- * 自定义字段
- */
-function CustomField({
-  config,
-  value,
-  onChange,
-  error,
-  disabled,
-  fullConfig,
-}: {
-  config: FieldConfig;
-  value: unknown;
-  onChange: (value: unknown) => void;
-  error?: string;
-  disabled: boolean;
-  fullConfig: LLMConfig;
-}) {
-  if (config.type !== "custom") return null;
-
-  const renderProps: CustomFieldRenderProps = {
-    value,
-    onChange,
-    error,
-    disabled,
-    config: fullConfig,
-  };
-
-  return (
-    <div className={cn("space-y-2", config.className)}>
-      {config.label && (
-        <Label>
-          {config.label}
-          {config.required && <span className="text-destructive ml-1">*</span>}
-        </Label>
-      )}
-      {config.render(renderProps)}
-      {error && <p className="text-sm text-destructive">{error}</p>}
-      {config.description && (
-        <p className="text-sm text-muted-foreground">{config.description}</p>
-      )}
-    </div>
-  );
-}
