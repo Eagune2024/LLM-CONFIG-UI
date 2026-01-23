@@ -6,10 +6,10 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/registry/new-york/ui/input";
 import { Label } from "@/registry/new-york/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york/ui/select";
-import type { FieldConfig } from "./form-config";
+import { ProviderFormField } from "../lib/provider-form-config";
 
 interface FormFieldProps {
-  config: FieldConfig;
+  config: ProviderFormField;
   error?: string;
   value: unknown;
   onChange: (value: unknown) => void;
@@ -24,7 +24,7 @@ export function FormField({ config, error, value, onChange }: FormFieldProps) {
   switch (config.type) {
     case "select":
       return (<SelectField config={config} value={value} onChange={onChange} error={error} /> );
-    case "text":
+    case "input":
     case "password":
       return (<TextField config={config} value={value} onChange={onChange} error={error} /> );
     default:
@@ -59,18 +59,11 @@ function SelectField({ config, value, onChange, error }: FormFieldProps) {
   return (
     <FieldWrapper label={config.label} required={config.required} error={error} description={config.description} className={config.className}>
       <Select value={String(value ?? "")} onValueChange={onChange} >
-        <SelectTrigger
-          className={cn(
-            error && "border-destructive focus-visible:ring-destructive",
-            "w-full",
-          )}
-        >
-          <SelectValue
-            placeholder={config.placeholder || `选择${config.label}`}
-          />
+        <SelectTrigger className={cn(error && "border-destructive focus-visible:ring-destructive", "w-full")}>
+          <SelectValue placeholder={config.placeholder || `选择${config.label}`} />
         </SelectTrigger>
         <SelectContent>
-          {config.options.map((option) => (
+          {config.options?.map((option) => (
             <SelectItem key={option.value} value={option.value}>
               {option.label}
             </SelectItem>
@@ -86,7 +79,7 @@ function SelectField({ config, value, onChange, error }: FormFieldProps) {
  */
 function TextField({ config, value, onChange, error }: FormFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
-  if (config.type !== "text" && config.type !== "password") return null;
+  if (config.type !== "input" && config.type !== "password") return null;
   return (
     <FieldWrapper label={config.label} required={config.required} error={error} description={config.description} className={config.className}>
       <div className="relative">
@@ -97,7 +90,7 @@ function TextField({ config, value, onChange, error }: FormFieldProps) {
           value={String(value ?? "")}
           onChange={(e) => onChange(e.target.value)}
         />
-        {config.type === "password" && config.showPasswordToggle !== false && (
+        {config.type === "password" && (
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}

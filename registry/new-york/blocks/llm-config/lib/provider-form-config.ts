@@ -1,10 +1,12 @@
 export interface ProviderFormField {
   prop: string;
   label: string;
-  type: "select" | "input";
+  type: "select" | "input" | "password";
   options?: Array<{ label: string; value: string }>;
   placeholder?: string;
   required?: boolean;
+  className?: string;
+  description?: string;
 }
 
 export interface ProviderFormConfig {
