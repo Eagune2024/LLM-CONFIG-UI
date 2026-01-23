@@ -3,10 +3,7 @@
 import * as React from "react";
 import { OpenInV0Button } from "@/components/open-in-v0-button";
 import { LLMConfigForm } from "@/registry/new-york/blocks/llm-config/components";
-import type {
-  LLMConfig,
-  LLMConfigFormRef,
-} from "@/registry/new-york/blocks/llm-config/components";
+import type { LLMConfig, LLMConfigFormRef } from "@/registry/new-york/blocks/llm-config/components";
 import { defaultLLMFormConfig } from "@/registry/new-york/blocks/llm-config/lib/default-form-config";
 import { DEFAULT_CONFIG } from "@/registry/new-york/blocks/llm-config/lib/providers";
 import { Button } from "@/registry/new-york/ui/button";
